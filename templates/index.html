@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Space Data API - Home{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="hero-tag">LIVE NASA &amp; ISS DATA</div>
+  <h1 class="hero-title">Explore the <span class="accent">Universe</span><br>Through Real Data</h1>
+  <p class="hero-sub">
+    A full-stack Python &amp; Flask project pulling live data from NASA's APIs.<br>
+    Built for learning. Designed for the stars.
+  </p>
+
+  <div class="card-grid">
+
+    <a href="/apod-page" class="feature-card" style="--card-color: #f97316;">
+      <div class="card-icon">🌌</div>
+      <h3>Astronomy Picture</h3>
+      <p>NASA's hand-picked photo of the cosmos — updated every day with a full explanation.</p>
+      <span class="card-cta">View Today's Photo →</span>
+    </a>
+
+    <a href="/mars-page" class="feature-card" style="--card-color: #ef4444;">
+      <div class="card-icon">🔴</div>
+      <h3>Mars Gallery</h3>
+      <p>Real photographs captured by the Curiosity Rover on the Martian surface.</p>
+      <span class="card-cta">Browse Photos →</span>
+    </a>
+
+    <a href="/iss-page" class="feature-card" style="--card-color: #22d3ee;">
+      <div class="card-icon">🛰️</div>
+      <h3>ISS Live Tracker</h3>
+      <p>Track the International Space Station's exact coordinates in real-time.</p>
+      <span class="card-cta">Track Now →</span>
+    </a>
+
+  </div>
+</section>
+
+<section class="api-section">
+  <h2 class="section-title">API <span class="accent">Endpoints</span></h2>
+  <p class="section-sub">This project exposes clean JSON APIs. Try them directly in your browser.</p>
+  <div class="endpoint-list">
+    <div class="endpoint-item">
+      <span class="method">GET</span>
+      <code>/apod</code>
+      <span class="endpoint-desc">Astronomy Picture of the Day</span>
+    </div>
+    <div class="endpoint-item">
+      <span class="method">GET</span>
+      <code>/mars-photos</code>
+      <span class="endpoint-desc">Mars Rover image gallery (12 photos)</span>
+    </div>
+    <div class="endpoint-item">
+      <span class="method">GET</span>
+      <code>/iss-location</code>
+      <span class="endpoint-desc">Live ISS latitude &amp; longitude</span>
+    </div>
+  </div>
+</section>
+{% endblock %}

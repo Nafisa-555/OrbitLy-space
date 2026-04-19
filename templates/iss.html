@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% block title %}ISS Tracker - Space Data API{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-tag">LIVE · AUTO-REFRESH</div>
+  <h1>ISS <span class="accent">Live Tracker</span></h1>
+  <p>The International Space Station orbits Earth every ~92 minutes at 28,000 km/h. Position updates every 5 seconds.</p>
+</div>
+
+<div id="loader" class="loader-wrap">
+  <div class="spinner"></div>
+  <p>Acquiring ISS signal…</p>
+</div>
+
+<div id="error-box" class="error-box hidden">
+  <span class="error-icon">⚠</span>
+  <span id="error-msg">Something went wrong.</span>
+</div>
+
+<div id="iss-content" class="hidden">
+
+  <div class="iss-coords-bar">
+    <div class="coord-card">
+      <span class="coord-label">LATITUDE</span>
+      <span class="coord-value" id="iss-lat">—</span>
+      <span class="coord-unit">degrees</span>
+    </div>
+    <div class="coord-card">
+      <span class="coord-label">LONGITUDE</span>
+      <span class="coord-value" id="iss-lon">—</span>
+      <span class="coord-unit">degrees</span>
+    </div>
+    <div class="coord-card">
+      <span class="coord-label">LAST UPDATE</span>
+      <span class="coord-value" id="iss-time" style="font-size:1.4rem;">-</span>
+      <span class="coord-unit">local time</span>
+    </div>
+  </div>
+
+  <!-- Embedded map via OpenStreetMap (no API key needed) -->
+  <div class="map-wrap">
+    <iframe
+      id="iss-map"
+      src=""
+      class="iss-map"
+      loading="lazy"
+      title="ISS Map">
+    </iframe>
+    <div class="map-overlay-label">📍 Current ISS Position</div>
+  </div>
+
+  <div class="iss-fact">
+    <strong>Did you know?</strong> The ISS travels at approximately <span class="accent">7.7 km/s</span> -
+    it crosses an entire continent in under 10 minutes.
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+let firstLoad = true;
+
+async function loadISS() {
+  const loader  = document.getElementById("loader");
+  const errBox  = document.getElementById("error-box");
+  const content = document.getElementById("iss-content");
+
+  try {
+    const res  = await fetch("/iss-location");
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error);
+
+    const lat = data.latitude.toFixed(4);
+    const lon = data.longitude.toFixed(4);
+    const time = new Date(data.timestamp * 1000).toLocaleTimeString();
+
+    document.getElementById("iss-lat").textContent  = lat;
+    document.getElementById("iss-lon").textContent  = lon;
+    document.getElementById("iss-time").textContent = time;
+
+    // Update the map iframe src (OpenStreetMap embed — no key needed)
+    const zoom = 4;
+    const mapSrc =
+      `https://www.openstreetmap.org/export/embed.html?bbox=${lon-20},${lat-10},${+lon+20},${+lat+10}` +
+      `&layer=mapnik&marker=${lat},${lon}`;
+    document.getElementById("iss-map").src = mapSrc;
+
+    if (firstLoad) {
+      loader.classList.add("hidden");
+      content.classList.remove("hidden");
+      firstLoad = false;
+    }
+
+  } catch (err) {
+    loader.classList.add("hidden");
+    document.getElementById("error-msg").textContent = err.message;
+    errBox.classList.remove("hidden");
+  }
+}
+
+// Load immediately, then every 5 seconds
+loadISS();
+setInterval(loadISS, 5000);
+</script>
+{% endblock %}

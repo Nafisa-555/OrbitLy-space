@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}APOD - Space Data API{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-tag">NASA API</div>
+  <h1>Astronomy Picture <span class="accent">of the Day</span></h1>
+  <p>NASA selects one extraordinary image of the cosmos each day, paired with a brief explanation written by a professional astronomer.</p>
+</div>
+
+<!-- Loading spinner -->
+<div id="loader" class="loader-wrap">
+  <div class="spinner"></div>
+  <p>Contacting NASA…</p>
+</div>
+
+<!-- Error box -->
+<div id="error-box" class="error-box hidden">
+  <span class="error-icon">⚠</span>
+  <span id="error-msg">Something went wrong.</span>
+</div>
+
+<!-- Content -->
+<div id="apod-content" class="hidden">
+  <div class="apod-layout">
+    <div class="apod-media-wrap">
+      <img id="apod-img" src="" alt="" class="apod-img"/>
+      <iframe id="apod-video" src="" frameborder="0" allowfullscreen class="apod-video hidden"></iframe>
+      <a id="apod-hd-link" href="#" target="_blank" class="hd-badge">View HD ↗</a>
+    </div>
+    <div class="apod-info">
+      <div class="apod-date" id="apod-date"></div>
+      <h2 class="apod-title" id="apod-title"></h2>
+      <p class="apod-explanation" id="apod-explanation"></p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+async function loadAPOD() {
+  const loader  = document.getElementById("loader");
+  const errBox  = document.getElementById("error-box");
+  const content = document.getElementById("apod-content");
+
+  try {
+    const res  = await fetch("/apod");
+    const data = await res.json();
+
+    if (data.error) throw new Error(data.error);
+
+    // Populate fields
+    document.getElementById("apod-date").textContent        = data.date;
+    document.getElementById("apod-title").textContent       = data.title;
+    document.getElementById("apod-explanation").textContent = data.explanation;
+    document.getElementById("apod-hd-link").href            = data.hdurl || data.url;
+
+    if (data.media_type === "video") {
+      document.getElementById("apod-video").src = data.url;
+      document.getElementById("apod-video").classList.remove("hidden");
+    } else {
+      document.getElementById("apod-img").src = data.url;
+      document.getElementById("apod-img").alt = data.title;
+    }
+
+    loader.classList.add("hidden");
+    content.classList.remove("hidden");
+
+  } catch (err) {
+    loader.classList.add("hidden");
+    document.getElementById("error-msg").textContent = err.message;
+    errBox.classList.remove("hidden");
+  }
+}
+
+loadAPOD();
+</script>
+{% endblock %}
