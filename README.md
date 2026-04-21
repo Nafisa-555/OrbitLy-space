@@ -1,4 +1,4 @@
-# 🚀 Space Data API — Full Stack Flask Project
+# 🚀 Space Data API - Full Stack Flask Project
 
 A full-stack web application that pulls **live data from NASA's APIs** and displays it
 in a modern, space-themed UI. Built with Python (Flask) on the backend and vanilla
@@ -61,7 +61,7 @@ pip install -r requirements.txt
 
 ### 4. Get a FREE NASA API key (optional but recommended)
 - Visit https://api.nasa.gov
-- Click **"Generate API Key"** — it's instant and free
+- Click **"Generate API Key"** - it's instant and free
 - Open `app.py` and replace `"DEMO_KEY"` with your key:
   ```python
   NASA_API_KEY = "your_actual_key_here"
