@@ -138,7 +138,7 @@ Test them directly: `http://127.0.0.1:5000/apod`
 
 ---
 
-## 🎓 Built for Portfolio
+## Built for Portfolio
 
 This project demonstrates:
 - REST API integration (NASA + Open Notify)
